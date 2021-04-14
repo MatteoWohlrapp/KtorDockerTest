@@ -1,27 +1,24 @@
 package com.example
 
 import io.ktor.application.*
-import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.`java-time`.datetime
 import org.jetbrains.exposed.sql.transactions.transaction
 
 fun main() {
     Database.connect("jdbc:postgresql://localhost:5432/postgres", driver = "org.postgresql.Driver", user ="postgres", password = "2702")
 
     transaction {
-        SchemaUtils.create (names)
-
-        println(names.selectAll())
+        SchemaUtils.create (Users)
+        SchemaUtils.create (PushUps)
+        SchemaUtils.create (Squats)
+        println(Users.selectAll())
     }
 
     embeddedServer(Netty, port = 8000) {
@@ -34,13 +31,13 @@ fun main() {
             }
             get("/names") {
                 transaction {
-                    SchemaUtils.create(names)
+                    SchemaUtils.create(Users)
                     transaction {
-                        names.insert {
-                            it[name] = "Matteo"
+                        Users.insert {
+                            it[userId] = "Matteo"
                         }
-                        SchemaUtils.create(names)
-                        val query = names.selectAll()
+                        SchemaUtils.create(Users)
+                        val query = Users.selectAll()
                         val builder = StringBuilder()
                         query.forEach {
                             builder.append("$it, ")
@@ -56,6 +53,20 @@ fun main() {
 
 }
 
-object names: IntIdTable() {
-    val name = varchar("name", 255)
+object Users: Table() {
+    val userId = varchar("userId", 255)
+}
+
+object PushUps: Table() {
+    private val userId = (varchar("userId", 255) references Users.userId)
+    override val primaryKey = PrimaryKey(userId)
+    private val score = integer("score")
+    private val timestamp = datetime("timestamp")
+}
+
+object Squats: Table() {
+    private val userId = (varchar("userId", 255) references Users.userId)
+    override val primaryKey = PrimaryKey(userId)
+    private val score = integer("score")
+    private val timestamp = datetime("timestamp")
 }
