@@ -15,12 +15,12 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 fun main() {
-    Database.connect("jdbc:postgresql://localhost:5432/sportify", driver = "org.postgresql.Driver", user ="envidual", password = "werksstudent")
+    Database.connect("jdbc:postgresql://localhost:5432/postgres", driver = "org.postgresql.Driver", user ="postgres", password = "mysecretpassword")
 
     transaction {
-        SchemaUtils.create (Users)
-        SchemaUtils.create (PushUps)
-        SchemaUtils.create (Squats)
+        SchemaUtils.create(Users)
+        SchemaUtils.create(PushUps)
+        SchemaUtils.create(Squats)
         println(Users.selectAll())
     }
 
@@ -78,17 +78,18 @@ fun main() {
 
 object Users: Table() {
     val userId = varchar("userId", 255)
+    override val primaryKey = PrimaryKey(userId)
 }
 
 object PushUps: Table() {
-    private val userId = (varchar("userId", 255) references Users.userId)
+    private val userId = (varchar("id", 255) references Users.userId)
     override val primaryKey = PrimaryKey(userId)
     private val score = integer("score")
     private val timestamp = datetime("timestamp")
 }
 
 object Squats: Table() {
-    private val userId = (varchar("userId", 255) references Users.userId)
+    private val userId = (varchar("id", 255) references Users.userId)
     override val primaryKey = PrimaryKey(userId)
     private val score = integer("score")
     private val timestamp = datetime("timestamp")
