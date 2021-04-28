@@ -41,7 +41,10 @@ paths:
           schema:
             type: array
             items:  
-              $ref: "#/definitions/Score"     
+              $ref: "#/definitions/Score"
+        "400":
+          description: "Bad request"     
+
     put:
       tags:
         - "Scores"
@@ -69,6 +72,9 @@ paths:
             type: "array"
             items: 
               $ref: "#/definitions/User"
+        "400":
+          description: "Bad request"
+
     put:
       tags:
         - "Users"
@@ -82,8 +88,10 @@ paths:
       responses:
         "201":
           description: "User created"
-        "204":
-          description: "No response"
+        "400":
+          description: "Bad request"
+        "409":
+          description: "Conflict; name already exists"
 
   /competitions:
     get:
@@ -100,6 +108,11 @@ paths:
           type: "string"
           format: "date-time"
           description: "Only competitions which were created after a particular time"
+        - name: "active"
+          in: "query"
+          type: "boolean"
+          description: "Only competitons that are still running"
+        
 
       responses:
         "200":
@@ -108,6 +121,8 @@ paths:
             type: "array"
             items: 
               $ref: "#/definitions/Competitions"
+        "400":
+          description: "Bad request"
 
     put:
       tags:
@@ -128,8 +143,8 @@ paths:
       responses:
         "201":
           description: "User created"
-        "204":
-          description: "No response"
+        "400":
+          description: "Bad request"
 
   /competitions/{competitionId}:
     get:
@@ -143,6 +158,8 @@ paths:
               type: "array"
               items: 
                 $ref: "#/definitions/Competition"
+          "400":
+            description: "Bad request"
 
     
 
@@ -165,7 +182,7 @@ definitions:
         type: "string"
       score:
         type: "integer"
-        
+
   Competition: 
     type: "object"
     properties: 
@@ -180,6 +197,8 @@ definitions:
       creationTimestamp: 
         type: "string"
         format: "date-time"
+      active:
+        type: "boolean"
       scores: 
         type: "array"
         items: 
@@ -201,6 +220,8 @@ definitions:
       creationTimestamp: 
         type: "string"
         format: "date-time"
+      active:
+        type: "boolean"
 
       
         
