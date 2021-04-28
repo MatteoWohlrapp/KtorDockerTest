@@ -110,19 +110,6 @@ paths:
             items: 
               $ref: "#/definitions/Competitions"
 
-  /competitions/{competitionId}:
-    get:
-        tags:
-          - "Competitions"
-        summary: "Get a specific competition"
-        responses:
-          "200":
-            description: "Users aquired"
-            schema:
-              type: "array"
-              items: 
-                $ref: "#/definitions/Competition"
-
     put:
       tags:
         - "Competitions"
@@ -145,6 +132,21 @@ paths:
           description: "User created"
         "204":
           description: "No response"
+
+  /competitions/{competitionId}:
+    get:
+        tags:
+          - "Competitions"
+        summary: "Get a specific competition"
+        responses:
+          "200":
+            description: "Users aquired"
+            schema:
+              type: "array"
+              items: 
+                $ref: "#/definitions/Competition"
+
+    
 
 definitions:
   User:
