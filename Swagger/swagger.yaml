@@ -19,13 +19,13 @@ paths:
         - "Scores"
       summary: "Get scores of users"
       parameters:
-        - name: "userName"
+        - name: "userId"
           in: "query"
-          type: "string"
+          type: "integer"
           description: "Only the selected user"
-        - name: "exerciseName"
+        - name: "exerciseId"
           in: "query"
-          type: "string"
+          type: "integer"
           description: "Only the selected exercise"
         - name: "timestamp"
           in: "query"
@@ -65,6 +65,11 @@ paths:
       tags:
         - "Users"
       summary: "Get a list of users"
+      parameters:
+        - name: "userId"
+          in: "query"
+          type: "integer"
+          description: "Only the selected users"
       responses:
         "200":
           description: "Users aquired"
@@ -75,7 +80,7 @@ paths:
         "400":
           description: "Bad request"
 
-    put:
+    post:
       tags:
         - "Users"
       summary: "Register a new user"
@@ -83,15 +88,23 @@ paths:
         - name: "body"
           in: "body"
           schema:
-              $ref: "#/definitions/User"
+            type: "object"
+            properties: 
+              userName:
+                type: "string"
 
       responses:
         "201":
           description: "User created"
+          schema:
+            items:  
+              $ref: "#/definitions/User"
+
         "400":
           description: "Bad request"
         "409":
           description: "Conflict; name already exists"
+
 
   /competitions:
     get:
@@ -99,20 +112,15 @@ paths:
         - "Competitions"
       summary: "Get a list of all competitons"
       parameters:
-        - name: "name"
+        - name: "userId"
           in: "query"
-          type: "string"
+          type: "integer"
           description: "Only the specified user"
         - name: "timestamp"
           in: "query"
           type: "string"
           format: "date-time"
           description: "Only competitions which were created after a particular time"
-        - name: "active"
-          in: "query"
-          type: "boolean"
-          description: "Only competitons that are still running"
-        
 
       responses:
         "200":
@@ -120,11 +128,11 @@ paths:
           schema:
             type: "array"
             items: 
-              $ref: "#/definitions/Competitions"
+              $ref: "#/definitions/Competition"
         "400":
           description: "Bad request"
 
-    put:
+    post:
       tags:
         - "Competitions"
       summary: "Create new Competition"
@@ -134,11 +142,9 @@ paths:
           schema:
             type: "object"
             properties: 
-              userNameOne:
-                type: "string"
-              userNameTwo: 
-                type: "string"
-              timestamp: 
+              userIdOne:
+                type: "integer"
+              userIdTwo: 
                 type: "integer"
       responses:
         "201":
@@ -160,6 +166,8 @@ paths:
                 $ref: "#/definitions/Competition"
           "400":
             description: "Bad request"
+          "501": 
+            description: "Not implemented"
 
     
 
@@ -167,61 +175,41 @@ definitions:
   User:
     type: "object"
     properties: 
+      id: 
+        type: "integer"
       name:
         type: "string"
 
   Score:
     type: "object"
     properties: 
-      userName:
-        type: "string"
+      userId:
+        type: "integer"
       timestamp:
-        type: "string"
-        format: "date-time"
-      exerciseName:
-        type: "string"
+        type: "integer"
+        format: "int64"
+      exerciseId:
+        type: "integer"
       score:
         type: "integer"
 
   Competition: 
     type: "object"
     properties: 
-      userNameOne:
-        type: "string"
-      userNameTwo: 
-        type: "string"
-      scoreOne: 
+      competitionId: 
         type: "integer"
-      scoreTwo: 
-        type: "integer"
+      userIdOne:
+        type: "string"
+      userIdTwo: 
+        type: "string"
       creationTimestamp: 
-        type: "string"
-        format: "date-time"
-      active:
-        type: "boolean"
+        type: "integer"
+        format: "int64"
       scores: 
         type: "array"
         items: 
           $ref: "#/definitions/Score"
 
-  Competitions: 
-    type: "object"
-    properties: 
-      competitionId: 
-        type: "integer"
-      userNameOne:
-        type: "string"
-      userNameTwo: 
-        type: "string"
-      scoreOne: 
-        type: "integer"
-      scoreTwo: 
-        type: "integer"
-      creationTimestamp: 
-        type: "string"
-        format: "date-time"
-      active:
-        type: "boolean"
 
       
         
