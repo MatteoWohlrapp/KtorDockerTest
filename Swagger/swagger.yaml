@@ -9,25 +9,25 @@ host: "sportify.envidual.com"
 schemes:
 - "https"
 tags:
-  - name: "Score"
-  - name: "User"
+  - name: "Scores"
+  - name: "Users"
+  - name: "Competitions"
 paths:
-  /score:
+  /scores:
     get:
       tags:
-        - "Score"
-      summary: "Get users with their highscores by exercise"
+        - "Scores"
+      summary: "Get highscores of users for every exercise"
       parameters:
-        - name: "id"
+        - name: "exerciseName"
+          in: "query"
+          type: "string"
+          description: "Only the selected exercise"
+        - name: "timestamp"
           in: "query"
           type: "integer"
           format: "int64"
-          description: "Identifier of the searched user"
-        - name: "window"
-          in: "query"
-          type: "integer"
-          format: "int64"
-          description: "Only scores reaching back in the window are included"
+          description: "Only scores which were saved after a perticular time"
         - name: "highscore"
           in: "query"
           type: "boolean"
@@ -41,7 +41,7 @@ paths:
               $ref: "#/definitions/Score"     
     put:
       tags:
-        - "Score"
+        - "Scores"
       summary: "Post a new score"
       parameters:
         - name: "body"
@@ -49,13 +49,43 @@ paths:
           schema:
             $ref: "#/definitions/Score"
       responses:
-        "200":
-          description: "Score got stored"
-  
-  /user:
+        "201":
+          description: "Score got created"
+        "400":
+          description: "Bad request"
+
+  /scores/{userId}:
+      get:
+        tags:
+          - "Scores"
+        summary: "Get highscores of specified user for a given exercise"
+        parameters:
+          - name: "exerciseId"
+            in: "query"
+            type: "integer"
+            format: "int64"
+            description: "Only the selected exercise"
+          - name: "timestamp"
+            in: "query"
+            type: "integer"
+            format: "int64"
+            description: "Only scores which were saved after a perticular time"
+          - name: "highscore"
+            in: "query"
+            type: "boolean"
+            description: "All or only the highest scores for the respective exercises"
+        responses:
+          "200":
+            description: "List aquired"
+            schema:
+              type: array
+              items:  
+                $ref: "#/definitions/Score"     
+
+  /users:
     get:
       tags:
-        - "User"
+        - "Users"
       summary: "Get a list of specified users"
       parameters:
         - name: "ids"
@@ -74,7 +104,7 @@ paths:
               $ref: "#/definitions/User"
     post:
       tags:
-        - "User"
+        - "Users"
       summary: "Register a new user"
       parameters:
         - name: "body"
@@ -87,17 +117,92 @@ paths:
       responses:
         "201":
           description: "User created"
+        "204":
+          description: "No response"
 
-  /user/{id}:
+  /users/{id}:
     get:
       tags:
-        - "User"
+        - "Users"
       summary: "Get one specific user"
       responses:
         "200":
           description: "User found"
           schema:
             $ref: "#/definitions/User"
+
+
+
+  /competitions:
+    get:
+      tags:
+        - "Competitions"
+      summary: "Get a list of specified users"
+      parameters:
+        - name: "ids"
+          in: "query"
+          type: "array"
+          items:
+            type: "integer"
+            format: "uint64"
+          description: "The identifiers of the searched users"
+        - name: "timestamp"
+          in: "query"
+          type: "integer"
+          format: "uint64"
+          description: "Only the competitions after the timestamp"
+        
+      responses:
+        "200":
+          description: "Competitions aquired"
+          schema:
+            type: "array"
+            items: 
+              $ref: "#/definitions/Competitions"
+
+    post:
+      tags:
+        - "Competitions"
+      summary: "Create new Competition"
+      parameters:
+        - name: "body"
+          in: "body"
+          schema:
+            type: "object"
+            properties: 
+              userOneId:
+                type: "integer"
+                format: "uint64"
+              userTwoId: 
+                type: "integer"
+                format: "uint64"
+      responses:
+        "201":
+          description: "User created"
+        "204":
+          description: "No response"
+    
+  /competitions/{userId}:
+    get:
+        tags:
+          - "Competitions"
+        summary: "Get a list of all competitions for a specified user"
+        parameters:
+          - name: "ids"
+            in: "query"
+            type: "array"
+            items:
+              type: "integer"
+              format: "uint64"
+            description: "The identifiers of the searched users"
+        responses:
+          "200":
+            description: "Users aquired"
+            schema:
+              type: "array"
+              items: 
+                $ref: "#/definitions/Competition"
+
 
 definitions:
   User:
@@ -112,6 +217,9 @@ definitions:
   Score:
     type: "object"
     properties: 
+      scoreId: 
+        type: "integer"
+        format: "uint64"
       userId:
         type: "integer"
         format: "uint64" 
@@ -124,4 +232,40 @@ definitions:
       score:
         type: "integer"
         format: "uint16"
+
+  Competition: 
+    type: "object"
+    properties: 
+      competitionId:
+        type: "integer"
+        format: "uint64"
+      userOneId: 
+        type: "integer"
+        format: "uint64"
+      userTwoId: 
+        type: "integer"
+        format: "uint64"
+      games: 
+        type: "array"
+        items: 
+          $ref: "#/definitions/Score"
+
+  Competitions: 
+    type: "object"
+    properties: 
+      competitionId:
+        type: "integer"
+        format: "uint64"
+      userOneId: 
+        type: "integer"
+        format: "uint64"
+      userTwoId: 
+        type: "integer"
+        format: "uint64"
+      creationTimestamp: 
+        type: "integer"
+        format: "uint64"
+
+      
+        
   
