@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.0-M2"
     application
 }
 
@@ -9,7 +9,7 @@ group = "me.matteowohlrapp"
 version = "1.0-SNAPSHOT"
 
 application {
-    mainClass.set("com.example.ApplicationKt")
+    mainClass.set("com.example.ServerKt")
 }
 
 
@@ -17,6 +17,12 @@ repositories {
     mavenCentral()
     jcenter()
 }
+
+//val jar by tasks.getting(Jar::class) {
+//    manifest {
+//        attributes["Main-Class"] = "com.example.Application"
+//    }
+//}
 
 dependencies {
     val exposedVersion = "0.30.1"
