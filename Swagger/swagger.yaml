@@ -199,9 +199,9 @@ definitions:
       competitionId: 
         type: "integer"
       userIdOne:
-        type: "string"
+        type: "integer"
       userIdTwo: 
-        type: "string"
+        type: "integer"
       creationTimestamp: 
         type: "integer"
         format: "int64"

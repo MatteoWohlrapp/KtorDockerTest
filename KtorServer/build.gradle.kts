@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.0-M2"
+    kotlin("plugin.serialization") version "1.4.31"
     application
 }
 
@@ -26,6 +27,7 @@ repositories {
 
 dependencies {
     val exposedVersion = "0.30.1"
+    val serializationVersion = "1.1.0"
     testImplementation(kotlin("test-junit"))
 //    ktor
     implementation("io.ktor:ktor-server-core:1.5.3")
@@ -38,6 +40,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 //    postgres
     implementation("org.postgresql:postgresql:42.2.2")
+    // serialization for easy conversion to JSON
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 }
 
 tasks.test {
