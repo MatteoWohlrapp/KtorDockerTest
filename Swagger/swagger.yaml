@@ -30,7 +30,6 @@ paths:
         - name: "timestamp"
           in: "query"
           type: "integer"
-          format: "int64"
           description: "Only scores which were saved after a particular time"
         - name: "highscore"
           in: "query"
@@ -139,7 +138,6 @@ paths:
                 type: "string"
               timestamp: 
                 type: "integer"
-                format: "uint64"
       responses:
         "201":
           description: "User created"
@@ -165,8 +163,7 @@ definitions:
         type: "string"
       score:
         type: "integer"
-        format: "uint16"
-
+        
   Competition: 
     type: "object"
     properties: 
@@ -191,7 +188,6 @@ definitions:
     properties: 
       competitionId: 
         type: "integer"
-        format: "uint64"
       userNameOne:
         type: "string"
       userNameTwo: 
