@@ -28,10 +28,12 @@ repositories {
 dependencies {
     val exposedVersion = "0.30.1"
     val serializationVersion = "1.1.0"
+    val ktorVersion = "1.5.3"
     testImplementation(kotlin("test-junit"))
 //    ktor
-    implementation("io.ktor:ktor-server-core:1.5.3")
-    implementation("io.ktor:ktor-server-netty:1.5.3")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-locations:$ktorVersion")
     implementation("ch.qos.logback:logback-classic:1.2.3")
 //    exposed
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")

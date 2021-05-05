@@ -1,6 +1,7 @@
 package com.example
 
 import io.ktor.application.*
+import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
@@ -35,80 +36,81 @@ fun main() {
 
     embeddedServer(Netty, port = 8000) {
         routing {
+            get("/scores") {
+                // TODO: how do we handle 16 possible parameter combinations? restrict API? what about optional parameters?
+
+            }
+            post("/scores") {
+                val parameters = call.receiveParameters()
+                val userId = parameters["userId"]
+                val timestamp = parameters["timestamp"]
+                val exerciseId = parameters["exerciseId"]
+                val score = parameters["score"]
+                if(listOf(userId, timestamp, exerciseId, score).none{parameter -> parameter == null}) {
+                    transaction {
+                        ("INSERT INTO scores (userId, timestamp, exercise, score) VALUES ($userId, $timestamp, $exerciseId, $score);").exec()
+                    }
+                }
+                else {
+                    // return some error to handler
+                }
+            }
+            get("/users") {
+                val closure : (ResultSet) -> Unit = { rs ->
+                    val users = ArrayList<User>()
+                    while(rs.next()) {
+                        val user = User(rs.getInt("id"), rs.getString("name"))
+                        users.add(user)
+                    }
+                    GlobalScope.launch {
+                        call.respondText(Json.encodeToString(users))
+                    }
+                }
+                transaction {
+                    // TODO: think of a different response when nothing comes back? or probably just pass empty array to handler and handler has to think of something
+                    ("SELECT id, name FROM users;").execAndReturn(closure)
+                }
+            }
             post("/users") {
                 val userName = call.receiveParameters()["name"]
                 if (userName != null) {
                     transaction {
-//                        Users.insert {
-//                            it[name] = userName
-//                        }
                         "INSERT INTO users (name) VALUES ('$userName');".exec()
                     }
                 }
             }
-            get("/users") {
-                transaction {
-//                    val query = Users.selectAll()
-//                    val builder = StringBuilder()
-//                    query.forEach {
-//                        builder.append("$it\n")
-//                    }
-//                    GlobalScope.launch {
-//                        call.respondText("Names:\n$builder")
-//                    }
-                    ("SELECT id, name FROM users;").execAndReturn { rs ->
-                        val users = ArrayList<User>()
-                        while(rs.next()) {
-                            val user = User(rs.getInt("id"), rs.getString("name"))
-                            users.add(user)
-                        }
-                        GlobalScope.launch {
-                            call.respondText(Json.encodeToString(users))
-                        }
+            get("/users/{id}") {
+                val id : String? = call.parameters["id"]
+                val closure : (ResultSet) -> Unit = { rs ->
+                    val users = ArrayList<User>()
+                    while(rs.next()) {
+                        val user = User(rs.getInt("id"), rs.getString("name"))
+                        users.add(user)
+                    }
+                    GlobalScope.launch {
+                        call.respondText(Json.encodeToString(users))
                     }
                 }
-            }
-            get("/") {
-                call.respondText("Gradle sucks!")
-            }
-            get("/boobs"){
-                call.respondText("Nice!")
-            }
-            get("/names") {
-                transaction {
-                    SchemaUtils.create(Users)
+                if(id != null) {
                     transaction {
-                        Users.insert {
-                            it[name] = "Matteo"
-                        }
-                        SchemaUtils.create(Users)
-                        val query = Users.selectAll()
-                        val builder = StringBuilder()
-                        query.forEach {
-                            builder.append("$it, ")
-                        }
-
-                        GlobalScope.launch {
-                            call.respondText("Names: $builder")
-                        }
+                        ("SELECT id, name FROM users WHERE id = $id;").execAndReturn(closure)
                     }
                 }
-            }
-            get("/highscores"){
-
-            }
-            post("/register"){
-                val userId = call.receiveParameters()["userId"]
-                transaction {
-
+                else {
+                    // return an error back to the handler
                 }
-                call.respondText("User is: $userId")
             }
-            post("/score"){
-                val userId = call.receiveParameters()["userId"]
-                val score = call.receiveParameters()["score"]
-                val exercise = call.receiveParameters()["exerciseName"]
-                call.respondText("User: $userId, Score: $score, Exercise: $exercise")
+            get("/competitions") {
+                val parameters = call.request.queryParameters
+                val userId = parameters["userId"]
+                val timestamp = parameters["timestamp"]
+                // TODO
+            }
+            post("/competitions") {
+                // TODO
+            }
+            get("/competitions/{id}") {
+                // TODO
             }
         }
     }.start(wait = true)
@@ -141,14 +143,6 @@ object CompetitionExercises: Table() {
     override val primaryKey = PrimaryKey(competitionId, scoreId)
 }
 
-
-// API classes
-@Serializable
-data class User (private val id: Int, private val name: String)
-@Serializable
-data class Score (private val userId: Int, private val timestamp: Long, private val exerciseId: Int, private val score: Int)
-@Serializable
-data class Competition (private val id: Int, private val userIdOne: Int, private val userIdTwo: Int, private val scores: ArrayList<Score>)
 
 
 
@@ -189,4 +183,11 @@ fun String.exec() {
 //    }
 //}
 
-
+//                val query = Users.selectAll()
+//                val builder = StringBuilder()
+//                query.forEach {
+//                    builder.append("$it\n")
+//                }
+//                GlobalScope.launch {
+//                    call.respondText("Names:\n$builder")
+//                }
