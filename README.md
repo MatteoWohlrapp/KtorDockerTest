@@ -6,9 +6,9 @@
     
   Or you can run the following commands: 
   
-    ./gradlew installDist <br/>
-    docker build -t ktor-server . <br/>
-    docker-compose up -d <br/>
+    ./gradlew installDist 
+    docker build -t ktor-server . 
+    docker-compose up -d 
     
 
  ## Running the server: 
