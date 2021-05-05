@@ -30,7 +30,7 @@ dependencies {
     val ktorVersion = "1.5.3"
     testImplementation(kotlin("test-junit"))
 //    ktor
-    implementation("io.ktor:ktor-server-core:1.5.3")
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:1.5.3")
     implementation("io.ktor:ktor-html-builder:1.5.3")
     implementation("ch.qos.logback:logback-classic:1.2.3")
@@ -48,13 +48,17 @@ dependencies {
 
     // serialization for easy conversion to JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+
+//    modules
+    implementation(project(":Handler"))
+
 }
 
 tasks.test {
     useJUnit()
 }
 
-tasks.withType<KotlinCompile>() {
+tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 val compileKotlin: KotlinCompile by tasks

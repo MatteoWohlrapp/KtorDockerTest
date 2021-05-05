@@ -9,12 +9,15 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.TransactionManager
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.sql.Timestamp
 import java.util.*
 
 // TODO: make sure that all the queries comply with required/optional parameter conventions defined in swagger.yaml
@@ -23,7 +26,7 @@ class Controller {
 }
 
 fun main() {
-    Database.connect("jdbc:postgresql://localhost:5432/postgres", driver = "org.postgresql.Driver", user ="postgres", password = "mysecretpassword")
+    Database.connect("jdbc:postgresql://ktorserver_db_1:5432/postgres", driver = "org.postgresql.Driver", user ="postgres", password = "mysecretpassword")
 
     transaction {
         SchemaUtils.drop(Competition_Exercises)

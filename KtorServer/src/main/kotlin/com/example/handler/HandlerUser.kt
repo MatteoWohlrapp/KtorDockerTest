@@ -1,12 +1,13 @@
 package com.example.handler
 
 import com.example.Controller
+import com.example.routing.Users
 import io.ktor.application.*
 import io.ktor.http.*
 
-class UserHandler(val controller: Controller) {
+class HandlerUser() {
 
-    fun getUsers(applicationCall: ApplicationCall) {
+    fun getUsers(applicationCall: ApplicationCall, users: Users) {
 
 
     }

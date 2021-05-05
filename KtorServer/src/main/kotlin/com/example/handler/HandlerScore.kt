@@ -1,9 +1,11 @@
 package com.example.handler
 
+import com.example.routing.Scores
 import io.ktor.application.*
 
-class ScoreHandler {
-    fun getScores(applicationCall: ApplicationCall) {
+class HandlerScore {
+
+    fun getScores(applicationCall: ApplicationCall, scores : Scores) {
 
 
     }
