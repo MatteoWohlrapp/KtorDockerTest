@@ -6,12 +6,23 @@ import io.ktor.application.*
 
 class ControllerScore {
     fun getScores(userId: Int, exerciseId: Int, timestamp: Long, highscore: Boolean) : List<Score> {
-        //TODO(not implemented yet)
-        return emptyList()
+
     }
 
     fun putScores(score: Score) : Boolean {
-        //TODO(not implemented yet)
+        val parameters = call.receiveParameters()
+        val userId = parameters["userId"]
+        val timestamp = parameters["timestamp"]
+        val exerciseId = parameters["exerciseId"]
+        val score = parameters["score"]
+        if (listOf(userId, timestamp, exerciseId, score).none { parameter -> parameter == null }) {
+            transaction {
+                ("INSERT INTO scores (user_id, timestamp, exercise, score) VALUES ($userId, $timestamp, $exerciseId, $score);").exec()
+            }
+        } else {
+            // return some error to handler
+        }
+        return emptyList()
         return false
     }
 }
