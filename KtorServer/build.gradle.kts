@@ -49,9 +49,6 @@ dependencies {
     // serialization for easy conversion to JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
-//    modules
-    implementation(project(":Handler"))
-
 }
 
 tasks.test {

@@ -1,4 +1,4 @@
-package com.example
+package com.example.model
 
 import kotlinx.serialization.Serializable
 import java.util.ArrayList
@@ -9,5 +9,5 @@ data class Competition (
     private val userIdOne: Int,
     private val userIdTwo: Int,
     private val timestamp: Long,
-    val scores: ArrayList<Score>
+    val scores: List<Score>
     )
