@@ -1,11 +1,13 @@
-# KtorDockerTest
-To start the containers run the following commands in the ./KtorServer directory: 
-./gradlew installDist
-docker build -t ktor-server .
-docker-compose up
+## KtorDockerTest
+#Starting the container: 
+  To start the containers run the following commands in the ./KtorServer directory: 
+    ./gradlew installDist<br />
+    docker build -t ktor-server .<br />
+    docker-compose up<br />
 
-To stop the containers run the following commands in the ./KtorServer directory: 
-docker-compose stop
+#Stopping the container: 
+  To stop the containers run the following commands in the ./KtorServer directory: 
+    docker-compose stop
 
-After modifying the server code, the image for the server needs to be removed and a build has to be triggered again: 
-docker image rm ktorserver
+  After modifying the server code, the image for the server needs to be removed and a build has to be triggered again: 
+    docker image rm ktorserver
