@@ -20,10 +20,12 @@ paths:
       summary: "Get scores of users"
       parameters:
         - name: "userId"
+          required: true
           in: "query"
           type: "integer"
           description: "Only the selected user"
         - name: "exerciseId"
+          required: true
           in: "query"
           type: "integer"
           description: "Only the selected exercise"
@@ -65,6 +67,13 @@ paths:
       tags:
         - "Users"
       summary: "Get a list of users"
+      parameters:
+        - name: "ids"
+          required: true
+          in: "query"
+          type: array
+          items: 
+            type: integer
       responses:
         "200":
           description: "Users aquired"
@@ -100,20 +109,6 @@ paths:
         "409":
           description: "Conflict; name already exists"
 
-  /users/{id}:
-    get:
-        tags:
-          - "Users"
-        summary: "Get a specific user"
-        responses:
-          "200":
-            description: "User aquired"
-            schema:
-              items: 
-                $ref: "#/definitions/User"
-          "400":
-            description: "Bad request"
-
   /competitions:
     get:
       tags:
@@ -121,13 +116,13 @@ paths:
       summary: "Get a list of all competitons"
       parameters:
         - name: "userId"
+          required: true
           in: "query"
           type: "integer"
           description: "Only the specified user"
         - name: "timestamp"
           in: "query"
-          type: "string"
-          format: "date-time"
+          type: "integer"
           description: "Only competitions which were created after a particular time"
 
       responses:
@@ -176,6 +171,22 @@ paths:
             description: "Bad request"
           "501": 
             description: "Not implemented"
+    
+  /competitions-scores: 
+    put:
+      tags:
+        - "Competitions"
+      summary: "Add another score to a competition"
+      parameters:
+        - name: "body"
+          in: "body"
+          schema:
+            $ref: "#/definitions/CompetitionScore"
+      responses:
+        "201":
+          description: "Score got created"
+        "400":
+          description: "Bad request"
 
     
 
@@ -193,11 +204,26 @@ definitions:
     properties: 
       userId:
         type: "integer"
+      exerciseId:
+        type: "integer"
       timestamp:
         type: "integer"
         format: "int64"
+      score:
+        type: "integer"
+  
+  CompetitionScore: 
+    type: "object"
+    properties: 
+      competitionId: 
+        type: "integer"
+      userId:
+        type: "integer"
       exerciseId:
         type: "integer"
+      timestamp:
+        type: "integer"
+        format: "int64"
       score:
         type: "integer"
 
