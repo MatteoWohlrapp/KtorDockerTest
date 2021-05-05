@@ -5,6 +5,7 @@ import com.example.handler.HandlerCompetition
 import com.example.handler.HandlerScore
 import com.example.handler.HandlerUser
 import com.example.paths.CompetitionsPath
+import com.example.paths.CompetitionsScorePath
 import com.example.paths.ScoresPath
 import com.example.paths.UsersPath
 import io.ktor.application.*
@@ -27,34 +28,28 @@ fun Application.module(){
     routing {
 
         get<ScoresPath>{ scores ->
-            call.respondText("Given userId: ${scores.userId}")
+            handlerScore.getScores(call, scores)
         }
-        put<ScoresPath>{ scores ->
-            val params = call.receiveParameters()
-            val userId = params["userId"]
-            val timestamp = params["timestamp"]
-            val exerciseId = params["exerciseId"]
-            val score = params["score"]
-            call.respondText("Given userId: $userId")
+        put<ScoresPath>{
+            handlerScore.putScores(call)
         }
         get<UsersPath>{ users ->
-            call.respondText("Given userId: ${users.ids}")
+            handlerUser.getUsers(call, users)
         }
         post<UsersPath>{
-            val params = call.receiveParameters()
-            val name = params["name"]
-            call.respondText("Given name $name")
+            handlerUser.postUsers(call)
         }
         get<CompetitionsPath>{ competitions ->
-            call.respondText("Given userId: ${competitions.userId}")
-
-        }
-        post<CompetitionsPath>{
-
+            handlerCompetition.getCompetitions(call, competitions)
         }
         get<CompetitionsPath.CompetitionId>{ competitionsId ->
-            call.respondText("Given competitionId: ${competitionsId.id}")
+            handlerCompetition.getCompetition(call, competitionsId)
         }
-
+        post<CompetitionsPath>{
+            handlerCompetition.postCompetitions(call)
+        }
+        put<CompetitionsScorePath>{
+            handlerCompetition.putCompetitionScore(call)
+        }
     }
 }

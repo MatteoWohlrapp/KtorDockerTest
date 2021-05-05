@@ -6,6 +6,6 @@ import io.ktor.locations.*
 data class ScoresPath(
     val userId: Int = -1,
     val exerciseId: Int = -1,
-    val timestamp: Int = 0,
+    val timestamp: Long = 0,
     val highscore: Boolean = false
 )

@@ -1,6 +1,7 @@
 package com.example.controller
 
 import com.example.model.Competition
+import com.example.model.CompetitionScore
 import com.example.model.Score
 import com.example.paths.CompetitionsPath
 import io.ktor.application.*
@@ -22,7 +23,7 @@ class ControllerCompetition {
         return false
     }
 
-    fun putCompetitionScore(score: Score): Boolean{
+    fun putCompetitionScore(score: CompetitionScore): Boolean{
         // TODO("not implemented yet")
         return false
     }

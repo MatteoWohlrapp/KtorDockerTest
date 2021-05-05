@@ -18,12 +18,6 @@ repositories {
     jcenter()
 }
 
-//val jar by tasks.getting(Jar::class) {
-//    manifest {
-//        attributes["Main-Class"] = "com.example.Application"
-//    }
-//}
-
 dependencies {
     val exposedVersion = "0.30.1"
     val serializationVersion = "1.1.0"
