@@ -1,20 +1,33 @@
 # KtorDockerTest
 ## Starting the container: 
-  To start the containers run the following commands in the ./KtorServer directory: <br/>
+  To start the containers run the following command in the /KtorServer directory: <br/>
+  
+    ./start_container.zsh   
+    
+  Or you can run the following commands: 
+  
     ./gradlew installDist <br/>
     docker build -t ktor-server . <br/>
-    docker-compose up <br/>
+    docker-compose up -d <br/>
+    
 
  ## Running the server: 
-  After the containers are started, the server automatically starts. To test if it is working try: <br/>
+  After the containers are started, the server automatically starts. To test if it is working try: <br/>  
+  
   curl -X GET  "http://0.0.0.0:8080/"
 
 ## Stopping the container: 
-  To stop the containers run the following commands in the ./KtorServer directory: <br/>
-    docker-compose stop
 
-  After modifying the server code, the image for the server needs to be removed and a build has to be triggered again: <br/>
+  To stop the containers and delete the image run the following command in the /KtorServer directory: <br/>
+  
+     ./stop_container.zsh
+     
+  Or you can run the following commands: 
+  
+    docker-compose stop
+    docker container rm ktorserver_server_1
     docker image rm ktorserver
+     
     
     
 
