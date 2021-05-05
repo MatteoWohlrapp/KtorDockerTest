@@ -2,7 +2,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("jvm") version "1.5.0-M2"
-    kotlin("plugin.serialization") version "1.4.31"
     application
 }
 
@@ -31,10 +30,12 @@ dependencies {
     val ktorVersion = "1.5.3"
     testImplementation(kotlin("test-junit"))
 //    ktor
-    implementation("io.ktor:ktor-server-core:$ktorVersion")
-    implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-locations:$ktorVersion")
+    implementation("io.ktor:ktor-server-core:1.5.3")
+    implementation("io.ktor:ktor-server-netty:1.5.3")
+    implementation("io.ktor:ktor-html-builder:1.5.3")
     implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("io.ktor:ktor-locations:1.5.3")
+
 //    exposed
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
@@ -42,6 +43,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:$exposedVersion")
 //    postgres
     implementation("org.postgresql:postgresql:42.2.2")
+    implementation(kotlin("stdlib-jdk8"))
+
+
     // serialization for easy conversion to JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 }
@@ -52,4 +56,12 @@ tasks.test {
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }

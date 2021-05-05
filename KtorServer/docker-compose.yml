@@ -1,0 +1,13 @@
+version: '3.1'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+    ports:
+    - 5432:5432
+
+  server:
+    image: ktor-server
+    ports:
+      - 8080:8080

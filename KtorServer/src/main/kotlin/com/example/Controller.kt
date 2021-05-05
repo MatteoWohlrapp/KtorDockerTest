@@ -20,6 +20,11 @@ import java.sql.ResultSet
 import java.sql.Timestamp
 import java.util.*
 
+
+class Controller {
+
+}
+
 fun main() {
     Database.connect("jdbc:postgresql://localhost:5432/postgres", driver = "org.postgresql.Driver", user ="postgres", password = "mysecretpassword")
 
@@ -54,6 +59,8 @@ fun main() {
                 else {
                     // return some error to handler
                 }
+
+
             }
             get("/users") {
                 val closure : (ResultSet) -> Unit = { rs ->
@@ -117,11 +124,11 @@ fun main() {
 
 }
 
-object Users: Table() {
-    val id = integer("id").autoIncrement()
-    val name = varchar("name", 255)
-    override val primaryKey = PrimaryKey(id)
-}
+//object Users: Table() {
+//    val id = integer("id").autoIncrement()
+//    val name = varchar("name", 255)
+//    override val primaryKey = PrimaryKey(id)
+//}
 object ExerciseScores: Table() {
     val id = integer("id").autoIncrement()
     val userId = integer("userId").references(Users.id, onDelete = ReferenceOption.CASCADE)
