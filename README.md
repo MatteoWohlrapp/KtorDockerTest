@@ -1,11 +1,11 @@
-## KtorDockerTest
-# Starting the container: 
+# KtorDockerTest
+## Starting the container: 
   To start the containers run the following commands in the ./KtorServer directory: <br/>
     ./gradlew installDist <br/>
     docker build -t ktor-server . <br/>
     docker-compose up <br/>
 
-# Stopping the container: 
+## Stopping the container: 
   To stop the containers run the following commands in the ./KtorServer directory: <br/>
     docker-compose stop
 
