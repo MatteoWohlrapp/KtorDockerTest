@@ -42,9 +42,3 @@ fun main(args: Array<String>) {
         }
     }.start(wait = true)
 }
-
-object Users: Table() {
-    val id = integer("id").autoIncrement()
-    val name = varchar("name", 255)
-    override val primaryKey = PrimaryKey(id)
-}
