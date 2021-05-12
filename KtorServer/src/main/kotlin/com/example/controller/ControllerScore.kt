@@ -21,9 +21,7 @@ class ControllerScore {
                 val resultRows = mutableListOf<ResultRow>()
                 var query =
                     Exercise_Scores.select {
-                        Exercise_Scores.userId.eq(userId)
-                        Exercise_Scores.exerciseId.eq(exerciseId)
-                        Exercise_Scores.timestamp.greater(
+                        Exercise_Scores.userId.eq(userId) and Exercise_Scores.exerciseId.eq(exerciseId) and Exercise_Scores.timestamp.greater(
                             timestamp
                         )
                     }
@@ -31,6 +29,7 @@ class ControllerScore {
                     val resultRow = query.maxWithOrNull { rR1, rR2 ->
                         rR1[Exercise_Scores.score] - rR2[Exercise_Scores.score]
                     }
+
                     if (resultRow != null) {
                         resultRows.add(resultRow)
                     }
