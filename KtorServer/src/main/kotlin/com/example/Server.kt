@@ -6,12 +6,12 @@ import com.example.handler.HandlerCompetition
 import com.example.handler.HandlerScore
 import com.example.handler.HandlerUser
 import com.example.paths.CompetitionsPath
-import com.example.paths.CompetitionsScorePath
 import com.example.paths.ScoresPath
 import com.example.paths.UsersPath
 import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.locations.*
-import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.netty.*
@@ -63,13 +63,13 @@ fun Application.module(){
         get<ScoresPath>{ scores ->
             handlerScore.getScores(call, scores)
         }
-        put<ScoresPath>{
+        put("/scores"){
             handlerScore.putScores(call)
         }
         get<UsersPath>{ users ->
             handlerUser.getUsers(call, users)
         }
-        post<UsersPath>{
+        post("/users"){
             handlerUser.postUsers(call)
         }
         get<CompetitionsPath>{ competitions ->
@@ -78,10 +78,10 @@ fun Application.module(){
         get<CompetitionsPath.CompetitionId>{ competitionsId ->
             handlerCompetition.getCompetition(call, competitionsId)
         }
-        post<CompetitionsPath>{
+        post("/competitions"){
             handlerCompetition.postCompetitions(call)
         }
-        put<CompetitionsScorePath>{
+        put("/competition-score"){
             handlerCompetition.putCompetitionScore(call)
         }
     }
