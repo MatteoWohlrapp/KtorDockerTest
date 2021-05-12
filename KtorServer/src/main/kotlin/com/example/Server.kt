@@ -2,12 +2,16 @@ package com.example
 
 
 import com.example.cache.*
+import com.example.di.serverModule
+import com.example.domain.exceptions.MissingBodyParameterException
+import com.example.domain.exceptions.MissingPathParameterException
+import com.example.domain.exceptions.ParsingException
 import com.example.handler.HandlerCompetition
 import com.example.handler.HandlerScore
 import com.example.handler.HandlerUser
-import com.example.paths.CompetitionsPath
-import com.example.paths.ScoresPath
-import com.example.paths.UsersPath
+import com.example.domain.paths.CompetitionsPath
+import com.example.domain.paths.ScoresPath
+import com.example.domain.paths.UsersPath
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -18,6 +22,10 @@ import io.ktor.server.netty.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.koin.dsl.module
+import org.koin.ktor.ext.Koin
+import org.koin.ktor.ext.inject
+import java.lang.NumberFormatException
 
 
 fun main(args: Array<String>) {
@@ -54,10 +62,32 @@ fun insertFirstValues() {
 }
 
 fun Application.module(){
+
+
     install(Locations)
-    val handlerUser = HandlerUser()
-    val handlerScore = HandlerScore()
-    val handlerCompetition = HandlerCompetition()
+    install(Koin) {
+        modules(serverModule)
+    }
+    install(StatusPages){
+        exception<MissingPathParameterException>{ cause ->
+            call.respond(HttpStatusCode.BadRequest, cause.message.toString())
+        }
+        exception<MissingBodyParameterException>{ cause ->
+            call.respond(HttpStatusCode.BadRequest, cause.message.toString())
+        }
+        exception<ParsingException>{cause ->
+            call.respond(HttpStatusCode.BadRequest, cause.message.toString())
+        }
+        exception<NumberFormatException>{ cause ->
+            call.respond(HttpStatusCode.BadRequest, cause.message.toString())
+        }
+        exception<Throwable>{ cause ->
+            call.respond(HttpStatusCode.InternalServerError, cause.message.toString())
+        }
+    }
+    val handlerUser by inject<HandlerUser>()
+    val handlerScore by inject<HandlerScore>()
+    val handlerCompetition by inject<HandlerCompetition>()
 
     routing {
 
@@ -87,3 +117,5 @@ fun Application.module(){
         }
     }
 }
+
+

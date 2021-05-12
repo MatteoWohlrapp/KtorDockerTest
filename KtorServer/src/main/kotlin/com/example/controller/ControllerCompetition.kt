@@ -1,10 +1,10 @@
 package com.example.controller
 
 import com.example.cache.execAndReturn
-import com.example.model.Competition
-import com.example.model.CompetitionScore
-import com.example.model.Score
-import com.example.paths.CompetitionsPath
+import com.example.domain.model.Competition
+import com.example.domain.model.CompetitionScore
+import com.example.domain.model.Score
+
 import io.ktor.application.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -68,14 +68,12 @@ class ControllerCompetition {
         return Competition(0, 0, 0, 0, emptyList())
     }
 
-    fun postCompetitions(userIdOne: Int, userIdTwo: Int): Boolean {
+    fun postCompetitions(userIdOne: Int, userIdTwo: Int) {
         // TODO("not implemented yet")
-        return false
     }
 
-    fun putCompetitionScore(score: CompetitionScore): Boolean {
+    fun putCompetitionScore(score: CompetitionScore) {
         // TODO("not implemented yet")
-        return false
     }
 
 }

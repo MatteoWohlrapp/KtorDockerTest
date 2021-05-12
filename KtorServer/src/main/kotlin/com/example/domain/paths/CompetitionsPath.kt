@@ -1,4 +1,4 @@
-package com.example.paths
+package com.example.domain.paths
 
 import io.ktor.locations.*
 

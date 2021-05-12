@@ -2,8 +2,7 @@ package com.example.controller
 
 import com.example.cache.exec
 import com.example.cache.execAndReturn
-import com.example.model.Score
-import com.example.paths.ScoresPath
+import com.example.domain.model.Score
 import io.ktor.application.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -39,10 +38,9 @@ class ControllerScore {
     }
 
     // TODO: deal with idempotence, don't trash database
-    fun putScores(score: Score) : Boolean {
+    fun putScores(score: Score) {
         transaction {
             "INSERT INTO exercise_scores (user_id, timestamp, exercise, score) VALUES (${score.userId}, ${score.timestamp}, ${score.exerciseId}, ${score.score});".exec()
         }
-        return false
     }
 }

@@ -2,8 +2,7 @@ package com.example.controller
 
 import com.example.cache.exec
 import com.example.cache.execAndReturn
-import com.example.model.User
-import kotlinx.coroutines.sync.Semaphore
+import com.example.domain.model.User
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.lang.RuntimeException
 

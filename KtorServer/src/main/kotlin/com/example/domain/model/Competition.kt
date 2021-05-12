@@ -1,7 +1,6 @@
-package com.example.model
+package com.example.domain.model
 
 import kotlinx.serialization.Serializable
-import java.util.ArrayList
 
 @Serializable
 data class Competition (

@@ -23,6 +23,8 @@ dependencies {
     val exposedVersion = "0.30.1"
     val serializationVersion = "1.1.0"
     val ktorVersion = "1.5.3"
+    // Current version
+    val koin_version = "3.0.1"
     testImplementation(kotlin("test-junit"))
 //    ktor
     implementation("io.ktor:ktor-server-core:$ktorVersion")
@@ -43,6 +45,9 @@ dependencies {
 
     // serialization for easy conversion to JSON
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+
+    // Koin for Ktor
+    implementation("io.insert-koin:koin-ktor:$koin_version")
 
 }
 
