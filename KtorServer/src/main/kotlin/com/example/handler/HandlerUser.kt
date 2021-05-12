@@ -39,8 +39,7 @@ class HandlerUser(val controller: ControllerUser) {
             val name = params["name"]
 //            applicationCall.respondText("Name is: $name")
 
-            val userId = controller.postUsers(name!!)
-            val user = User(userId, name)
+            val user = controller.postUsers(name!!)
             applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(user))
             //TODO add custom exception for postUsers in Controller
 
