@@ -8,15 +8,15 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 class ControllerScore {
 
-    //TODO("check case if no user is given")
     fun getScores(inputUserIds: Iterable<Int>, exerciseId: Int, timestamp: Long, highscore: Boolean): List<Score> {
 
         return transaction {
             val scores = mutableListOf<Score>()
             var userIds = inputUserIds
             if (inputUserIds.none()) {
-                userIds = Users.slice(Users.id).selectAll().map { resultRow -> resultRow[Users.id] }
+                userIds = Users.selectAll().map { resultRow -> resultRow[Users.id] }
             }
+
             for (userId in userIds) {
                 val resultRows = mutableListOf<ResultRow>()
                 var query =
