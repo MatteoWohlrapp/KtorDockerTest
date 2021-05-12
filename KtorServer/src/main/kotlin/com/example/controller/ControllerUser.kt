@@ -1,8 +1,10 @@
 package com.example.controller
 
+import com.example.cache.DBInitializer
 import com.example.cache.Users
 import com.example.domain.exceptions.UserNameAlreadyExistsException
 import com.example.domain.model.User
+import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction

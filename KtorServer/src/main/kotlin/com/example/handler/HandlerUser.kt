@@ -37,7 +37,6 @@ class HandlerUser(val controller: ControllerUser) {
         try {
             val params = applicationCall.receiveParameters()
             val name = params["name"]
-//            applicationCall.respondText("Name is: $name")
 
             val user = controller.postUsers(name!!)
             applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(user))

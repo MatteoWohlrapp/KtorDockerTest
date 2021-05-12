@@ -20,10 +20,8 @@ import java.lang.NumberFormatException
 class HandlerScore(val controller: ControllerScore) {
 
     suspend fun getScores(applicationCall: ApplicationCall, scoresPath: ScoresPath) {
-        if (!scoresPath.userIds.any { true } || scoresPath.exerciseId < 0)
+        if (scoresPath.exerciseId < 0)
             throw MissingPathParameterException() //returns code 400 Bad request
-
-//        applicationCall.respondText("Given userId: ${scoresPath.userIds}")
 
         try {
             val scores =
@@ -51,8 +49,6 @@ class HandlerScore(val controller: ControllerScore) {
                 params["timestamp"]!!.toLong(),
                 params["score"]!!.toInt()
             )
-//            applicationCall.respondText("Given userId: ${score.userId}")
-
 
             controller.putScores(score)
             applicationCall.respond(HttpStatusCode.OK, "Score added successfully.")

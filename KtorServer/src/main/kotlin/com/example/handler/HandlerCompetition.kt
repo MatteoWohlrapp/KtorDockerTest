@@ -22,13 +22,13 @@ class HandlerCompetition(val controller: ControllerCompetition) {
         if (competitionsPath.userId < 0)
             throw MissingPathParameterException()
 
-        applicationCall.respondText("Given userId: ${competitionsPath.userId}")
-
         try {
-//            val competitions =
-//                controller.getCompetitions(competitionsPath.userId,
-//                    competitionsPath.timestamp)
-//            applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(competitions))
+            val competitions =
+                controller.getCompetitions(
+                    competitionsPath.userId,
+                    competitionsPath.timestamp
+                )
+            applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(competitions))
 
             //TODO add custom exceptions for getCompetitions in Controller
         } catch (e: Exception) {
@@ -38,17 +38,13 @@ class HandlerCompetition(val controller: ControllerCompetition) {
 
     suspend fun getCompetition(applicationCall: ApplicationCall, competitionsIdPath: CompetitionsPath.CompetitionId) {
         //no parameter checking necessary, since it does not end up at this method otherwise
-        applicationCall.respondText("Given competitionId: ${competitionsIdPath.id}")
-
         val competition =
             controller.getCompetition(competitionsIdPath.id)
 
-        applicationCall.respondText("From Controller: ${Json.encodeToString(competition)}")
-
         try {
-//            val competition =
-//                controller.getCompetition(competitionsIdPath.id)
-//            applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(competition))
+            val competition =
+                controller.getCompetition(competitionsIdPath.id)
+            applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(competition))
 
             //TODO add custom exceptions for getCompetition in Controller
         } catch (e: Exception) {
@@ -62,14 +58,10 @@ class HandlerCompetition(val controller: ControllerCompetition) {
             val userIdOne = params["userIdOne"]!!.toInt()
             val userIdTwo = params["userIdTwo"]!!.toInt()
 
-            applicationCall.respondText("Given userIdOne: $userIdOne")
-
-
-//            controller.postCompetitions(userIdOne, userIdTwo)
-//            applicationCall.respond(HttpStatusCode.OK, "Competition created.")
+            controller.postCompetitions(userIdOne, userIdTwo)
+            applicationCall.respond(HttpStatusCode.OK, "Competition created.")
 
             //TODO add custom exceptions for postCompetitions in Controller
-            //TODO check if ther is already a competition ongoing
         } catch (e: NumberFormatException) {
             throw ParsingException()
         } catch (e: NullPointerException) {
@@ -90,10 +82,8 @@ class HandlerCompetition(val controller: ControllerCompetition) {
                 params["score"]!!.toInt()
             )
 
-            applicationCall.respondText("Given userId: ${score.userId}")
-
-//            controller.putCompetitionScore(score)
-//            applicationCall.respond(HttpStatusCode.OK, "Competition score added successfully.")
+            controller.putCompetitionScore(score)
+            applicationCall.respond(HttpStatusCode.OK, "Competition score added successfully.")
 
             //TODO add custom exceptions for putCompetitionScores in Controller
         } catch (e: NumberFormatException) {
