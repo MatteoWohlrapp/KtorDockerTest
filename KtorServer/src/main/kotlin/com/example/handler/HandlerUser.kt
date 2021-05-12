@@ -13,7 +13,6 @@ class HandlerUser {
     private val controller = ControllerUser()
 
     suspend fun getUsers(applicationCall: ApplicationCall, usersPath: UsersPath) {
-        println("Was routed to getUsers!")
         val users =
             controller.getUsers(usersPath.ids.toList())
         applicationCall.respondText("From Controller: ${Json.encodeToString(users)}")
@@ -23,7 +22,6 @@ class HandlerUser {
         val params = applicationCall.receiveParameters()
         val name = params["name"]
         val result = controller.postUsers(name!!)
-
         applicationCall.respondText("From Controller: $result")
     }
 }

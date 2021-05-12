@@ -14,8 +14,6 @@ class HandlerCompetition {
     private val controller = ControllerCompetition()
 
     suspend fun getCompetitions(applicationCall: ApplicationCall, competitionsPath: CompetitionsPath) {
-        applicationCall.respondText("Given userId: ${competitionsPath.userId}")
-
         val competitions =
             controller.getCompetitions(competitionsPath.userId, competitionsPath.timestamp)
 

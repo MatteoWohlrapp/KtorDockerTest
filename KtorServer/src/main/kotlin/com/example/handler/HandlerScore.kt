@@ -14,10 +14,8 @@ class HandlerScore {
     private val controller = ControllerScore()
 
     suspend fun getScores(applicationCall: ApplicationCall, scoresPath: ScoresPath) {
-        applicationCall.respondText("Given userId: ${scoresPath.userId}")
          val scores =
              controller.getScores(scoresPath.userId, scoresPath.exerciseId, scoresPath.timestamp, scoresPath.highscore)
-
         applicationCall.respondText("From Controller: ${Json.encodeToString(scores)}")
     }
 
@@ -29,8 +27,6 @@ class HandlerScore {
             params["timestamp"]!!.toLong(),
             params["score"]!!.toInt()
         )
-
-        applicationCall.respondText("Given userId: $")
 
         val result = controller.putScores(score)
 
