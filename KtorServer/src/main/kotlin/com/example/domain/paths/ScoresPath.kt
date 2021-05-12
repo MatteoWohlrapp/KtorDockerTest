@@ -7,5 +7,5 @@ data class ScoresPath(
     val userIds: Iterable<Int> = emptyList(),
     val exerciseId: Int = -1,
     val timestamp: Long = 0,
-    val highscore: Boolean = false
+    val highscore: Boolean = true
 )

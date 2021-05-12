@@ -52,6 +52,9 @@ fun insertFirstValues() {
     "insert into users (name) values ('Matteo');".exec()
     "insert into competitions (user_id_one, user_id_two, creation_timestamp) values (1,2,54783567);".exec()
     "insert into exercise_scores (user_id, timestamp, exercise, score) values (1,347856473,0,30);".exec()
+    "insert into exercise_scores (user_id, timestamp, exercise, score) values (1,347856473,0,35);".exec()
+    "insert into exercise_scores (user_id, timestamp, exercise, score) values (1,347856473,1,30);".exec()
+    "insert into exercise_scores (user_id, timestamp, exercise, score) values (2,347856473,0,35);".exec()
     "insert into competition_exercises (competition_id, score_id) values (1,1);".exec();
     "insert into exercise_scores (user_id, timestamp, exercise, score) values (2,53454732875,0,1);".exec()
     "insert into competition_exercises (competition_id, score_id) values (1,2);".exec();

@@ -19,8 +19,7 @@ paths:
         - "Scores"
       summary: "Get scores of users"
       parameters:
-        - name: "userId"
-          required: true
+        - name: "userIds"
           in: "query"
           type: "integer"
           description: "Only the selected user"
@@ -34,6 +33,7 @@ paths:
           type: "integer"
           description: "Only scores which were saved after a particular time"
         - name: "highscore"
+          default: true 
           in: "query"
           type: "boolean"
           description: "All or only the highest scores for the respective exercises"
@@ -169,10 +169,9 @@ paths:
                 $ref: "#/definitions/Competition"
           "400":
             description: "Bad request"
-          "501": 
-            description: "Not implemented"
+
     
-  /competitions-scores: 
+  /competition-scores: 
     put:
       tags:
         - "Competitions"
