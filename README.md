@@ -14,7 +14,7 @@
  ## Running the server: 
   After the containers are started, the server automatically starts. To test if it is working try: <br/>  
   
-  curl -X GET  "http://0.0.0.0:8080/"
+  curl -X GET  "http://0.0.0.0:8080/[...]"
 
 ## Stopping the container: 
 
