@@ -16,21 +16,16 @@ import org.postgresql.util.PSQLException
 import java.lang.Exception
 import java.lang.NullPointerException
 
-class HandlerUser(val controller: ControllerUser) {
+class HandlerUser(private val controller: ControllerUser) {
 
     suspend fun getUsers(applicationCall: ApplicationCall, usersPath: UsersPath) {
-        if (!usersPath.ids.any { true })
+        if (usersPath.ids.none())
             throw MissingPathParameterException()
 
-        try {
-            val users =
-                controller.getUsers(usersPath.ids.toList())
-            applicationCall.respondText(Json.encodeToString(users))
+        val users =
+            controller.getUsers(usersPath.ids.toList())
 
-            //TODO add custom exceptions for getUsers in Controller
-        } catch (e: PSQLException) {
-            applicationCall.respond(HttpStatusCode.InternalServerError, "Sql Exception")
-        }
+        applicationCall.respondText(Json.encodeToString(users))
     }
 
     suspend fun postUsers(applicationCall: ApplicationCall) {
@@ -39,15 +34,11 @@ class HandlerUser(val controller: ControllerUser) {
             val name = params["name"]
 
             val user = controller.postUsers(name!!)
-            applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(user))
-            //TODO add custom exception for postUsers in Controller
+
+            applicationCall.respond(HttpStatusCode.Created, Json.encodeToString(user))
 
         } catch (e: NullPointerException) {
             throw MissingBodyParameterException()
-        } catch (e: PSQLException) {
-            applicationCall.respond(HttpStatusCode.InternalServerError, "User was not added.")
-        } catch (e: UserNameAlreadyExistsException){
-            applicationCall.respond(HttpStatusCode.Conflict, "Username already exists.")
         }
     }
 }

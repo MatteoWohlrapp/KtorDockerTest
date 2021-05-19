@@ -9,7 +9,6 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class ControllerScore {
 
     fun getScores(inputUserIds: Iterable<Int>, exerciseId: Int, timestamp: Long, highscore: Boolean): List<Score> {
-
         return transaction {
             val scores = mutableListOf<Score>()
             var userIds = inputUserIds

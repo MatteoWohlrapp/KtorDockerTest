@@ -3,9 +3,10 @@ package com.example
 
 import com.example.cache.*
 import com.example.di.serverModule
+import com.example.domain.exceptions.CompetitionAlreadyActiveException
 import com.example.domain.exceptions.MissingBodyParameterException
 import com.example.domain.exceptions.MissingPathParameterException
-import com.example.domain.exceptions.ParsingException
+import com.example.domain.exceptions.UserNameAlreadyExistsException
 import com.example.handler.HandlerCompetition
 import com.example.handler.HandlerScore
 import com.example.handler.HandlerUser
@@ -19,12 +20,9 @@ import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.server.netty.*
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
+import org.postgresql.util.PSQLException
 import java.lang.NumberFormatException
 
 
@@ -41,6 +39,7 @@ fun Application.module(){
     install(Koin) {
         modules(serverModule)
     }
+
     install(StatusPages){
         exception<MissingPathParameterException>{ cause ->
             call.respond(HttpStatusCode.BadRequest, cause.message.toString())
@@ -48,16 +47,22 @@ fun Application.module(){
         exception<MissingBodyParameterException>{ cause ->
             call.respond(HttpStatusCode.BadRequest, cause.message.toString())
         }
-        exception<ParsingException>{cause ->
-            call.respond(HttpStatusCode.BadRequest, cause.message.toString())
+        exception<UserNameAlreadyExistsException>{ cause ->
+            call.respond(HttpStatusCode.Conflict, cause.message.toString())
         }
-        exception<NumberFormatException>{ cause ->
-            call.respond(HttpStatusCode.BadRequest, cause.message.toString())
+        exception<CompetitionAlreadyActiveException>{ cause ->
+            call.respond(HttpStatusCode.Conflict, cause.message.toString())
         }
-        exception<Throwable>{ cause ->
+        exception<PSQLException> { cause ->
             call.respond(HttpStatusCode.InternalServerError, cause.message.toString())
         }
+        // somehow it doesnt catch Number format exceptions as such
+        exception<Throwable>{ cause ->
+            if(cause.cause != null && cause.cause!!::class == NumberFormatException::class)
+                call.respond(HttpStatusCode.BadRequest, cause.message.toString())
+        }
     }
+
     val handlerUser by inject<HandlerUser>()
     val handlerScore by inject<HandlerScore>()
     val handlerCompetition by inject<HandlerCompetition>()

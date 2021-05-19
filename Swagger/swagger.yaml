@@ -78,7 +78,6 @@ paths:
         "200":
           description: "Users aquired"
           schema:
-            type: "array"
             items: 
               $ref: "#/definitions/User"
         "400":
@@ -101,7 +100,6 @@ paths:
         "201":
           description: "User created"
           schema:
-            items:  
               $ref: "#/definitions/User"
 
         "400":
@@ -153,9 +151,11 @@ paths:
         "201":
           description: "User created"
           schema:
-            type: "integer"
+            $ref: "#/definitions/Competition"
         "400":
           description: "Bad request"
+        "409":
+          description: "Conflict, competition already active."
 
   /competitions/{id}:
     get:
@@ -166,8 +166,6 @@ paths:
           "200":
             description: "Users aquired"
             schema:
-              type: "array"
-              items: 
                 $ref: "#/definitions/Competition"
           "400":
             description: "Bad request"

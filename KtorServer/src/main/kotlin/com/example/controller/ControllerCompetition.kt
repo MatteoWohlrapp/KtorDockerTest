@@ -3,7 +3,7 @@ package com.example.controller
 import com.example.cache.Competition_Exercises
 import com.example.cache.Competitions
 import com.example.cache.Exercise_Scores
-import com.example.domain.exceptions.NoSuchCompetitionException
+import com.example.domain.exceptions.CompetitionAlreadyActiveException
 import com.example.domain.model.Competition
 import com.example.domain.model.CompetitionScore
 import com.example.domain.model.Score
@@ -21,30 +21,33 @@ class ControllerCompetition {
                     timestamp
                 )
             }.forEach { competitionsResultRow ->
-                competitions.add(getCompetition(competitionsResultRow[Competitions.id]))
+                val competition = getCompetition(competitionsResultRow[Competitions.id])
+                if (competition != null )
+                    competitions.add(competition)
             }
 
             return@transaction competitions
         }
     }
 
-    fun getCompetition(competitionId: Int): Competition {
-       return transaction {
+    fun getCompetition(competitionId: Int): Competition? {
+        return transaction {
             val competition = Competitions.select { Competitions.id.eq(competitionId) }.firstOrNull()
-                ?: throw NoSuchCompetitionException()
-           val scores = mutableListOf<Score>()
+                ?: return@transaction null
+            val scores = mutableListOf<Score>()
             Competition_Exercises.join(Exercise_Scores, JoinType.INNER, additionalConstraint = {
                 Competition_Exercises.scoreId eq Exercise_Scores.id
-            }).select { Competition_Exercises.competitionId.eq(competition!![Competitions.id]) }.forEach { scoreResultRow ->
-                scores.add(
-                    Score(
-                        scoreResultRow[Exercise_Scores.id],
-                        scoreResultRow[Exercise_Scores.exerciseId],
-                        scoreResultRow[Exercise_Scores.timestamp],
-                        scoreResultRow[Exercise_Scores.score]
+            }).select { Competition_Exercises.competitionId.eq(competition!![Competitions.id]) }
+                .forEach { scoreResultRow ->
+                    scores.add(
+                        Score(
+                            scoreResultRow[Exercise_Scores.id],
+                            scoreResultRow[Exercise_Scores.exerciseId],
+                            scoreResultRow[Exercise_Scores.timestamp],
+                            scoreResultRow[Exercise_Scores.score]
+                        )
                     )
-                )
-            }
+                }
             return@transaction Competition(
                 competition!![Competitions.id],
                 competition!![Competitions.userIdOne],
@@ -56,30 +59,54 @@ class ControllerCompetition {
     }
 
 
-    // TODO("what happens when already a competition -> exception (currently we just accept, see below)")
-    fun postCompetitions(inputUserIdOne: Int, inputUserIdTwo: Int) : Int {
+    fun postCompetitions(inputUserIdOne: Int, inputUserIdTwo: Int): Competition {
         return transaction {
             // get unix timestamp
             val timestamp = System.currentTimeMillis() / 1000L;
-            // TODO: discuss again, might be way to expensive because it requires finding out if a challenge is still running and we have no easy way to find out
-//            // check if competition between those two users already exists
-//            val competitionsUserOne = getCompetitions(inputUserIdOne, 0)
-//            if(competitionsUserOne.any { competition ->
-//                    if(competition.userIdOne == inputUserIdOne) {
-//                        competition.userIdTwo == inputUserIdTwo
-//                    }
-//                    else competition.userIdOne == inputUserIdTwo
-//                }) {
-//                // a competition between those two users already exists; does not really help because it might be an old one which is alright
-//                // ...
-//            }
+
+            val openCompetitions =
+                Competitions.select {
+                    (Competitions.userIdOne.eq(inputUserIdOne) and Competitions.userIdTwo.eq(
+                        inputUserIdTwo
+                    )) or (Competitions.userIdOne.eq(inputUserIdTwo) and Competitions.userIdTwo.eq(inputUserIdOne))
+                }
+                    .any { resultRow ->
+                        val competition = getCompetition(resultRow[Competitions.id])
+                        if (competition != null) {
+                            if (competition.scores.size % 2 != 0)
+                                true
+
+                            var scoreOne = 0
+                            var scoreTwo = 0
+
+                            for (scorePlayerOne in competition.scores) {
+                                if (scorePlayerOne.userId == inputUserIdOne) {
+                                    val scorePlayerTwo = competition.scores.find { score ->
+                                        score.exerciseId == scorePlayerOne.exerciseId && score.userId != scorePlayerOne.exerciseId
+                                    }
+
+                                    if (scorePlayerOne.score > scorePlayerTwo!!.score)
+                                        scoreOne++
+                                    else
+                                        scoreTwo++
+                                }
+                            }
+
+                            // one player has to win at least 2 rounds to win.
+                            (scoreOne <= 1 && scoreTwo <= 1)
+                        }
+                        false
+                    }
+
+            if (openCompetitions)
+                throw CompetitionAlreadyActiveException()
+
             Competitions.insert {
                 it[userIdOne] = inputUserIdOne
                 it[userIdTwo] = inputUserIdTwo
                 it[creationTimestamp] = timestamp
             }
-            val newCompetition = getCompetitions(inputUserIdOne, timestamp).first()
-            return@transaction newCompetition.id
+            return@transaction getCompetitions(inputUserIdOne, timestamp).first()
         }
     }
 
@@ -107,7 +134,6 @@ class ControllerCompetition {
             }
         }
     }
-
 
 
 }
