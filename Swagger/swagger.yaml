@@ -113,7 +113,7 @@ paths:
     get:
       tags:
         - "Competitions"
-      summary: "Get a list of all competitons"
+      summary: "Get a list of all competitions for a user"
       parameters:
         - name: "userId"
           required: true
@@ -152,6 +152,8 @@ paths:
       responses:
         "201":
           description: "User created"
+          schema:
+            type: "integer"
         "400":
           description: "Bad request"
 
