@@ -3,6 +3,7 @@ package com.example.handler
 import com.example.controller.ControllerCompetition
 import com.example.domain.exceptions.MissingBodyParameterException
 import com.example.domain.exceptions.MissingPathParameterException
+import com.example.domain.exceptions.NoSuchCompetitionException
 import com.example.domain.exceptions.ParsingException
 import com.example.domain.model.CompetitionScore
 import com.example.domain.paths.CompetitionsPath
@@ -30,9 +31,8 @@ class HandlerCompetition(val controller: ControllerCompetition) {
                 )
             applicationCall.respond(HttpStatusCode.OK, Json.encodeToString(competitions))
 
-            //TODO add custom exceptions for getCompetitions in Controller
-        } catch (e: Exception) {
-            applicationCall.respond(HttpStatusCode.InternalServerError, e.toString())
+        } catch (e: NoSuchCompetitionException) {
+            applicationCall.respond(HttpStatusCode.BadRequest, e.toString())
         }
     }
 
@@ -58,8 +58,8 @@ class HandlerCompetition(val controller: ControllerCompetition) {
             val userIdOne = params["userIdOne"]!!.toInt()
             val userIdTwo = params["userIdTwo"]!!.toInt()
 
-            controller.postCompetitions(userIdOne, userIdTwo)
-            applicationCall.respond(HttpStatusCode.OK, "Competition created.")
+            val competitionId = controller.postCompetitions(userIdOne, userIdTwo)
+            applicationCall.respond(HttpStatusCode.OK, competitionId)
 
             //TODO add custom exceptions for postCompetitions in Controller
         } catch (e: NumberFormatException) {
